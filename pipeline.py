@@ -61,18 +61,20 @@ def create_pipeline(
     pipeline_name: Text, 
     pipeline_root: Text,
     data_root_uri: Union[Text, data_types.RuntimeParameter],
+    output_config: example_gen_pb2.Output,
     beam_pipeline_args: List[Text],
     metadata_connection_config: Optional[metadata_store_pb2.ConnectionConfig] = None) -> pipeline.Pipeline:
 
   
     # Brings data into the pipeline and splits the data into training and eval splits
-    output_config = example_gen_pb2.Output(
-      split_config=example_gen_pb2.SplitConfig(splits=[
-          example_gen_pb2.SplitConfig.Split(name='train', hash_buckets=4),
-          example_gen_pb2.SplitConfig.Split(name='eval', hash_buckets=1)
-      ]))
+    #output_config = example_gen_pb2.Output(
+    #  split_config=example_gen_pb2.SplitConfig(splits=[
+    #      example_gen_pb2.SplitConfig.Split(name='train', hash_buckets=4),
+    #      example_gen_pb2.SplitConfig.Split(name='test', hash_buckets=1)
+    #  ]))
   
-    examplegen = CsvExampleGen(input_base=data_root_uri)
+    examplegen = CsvExampleGen(input_base=data_root_uri,
+                               output_config=output_config)
   
   
     components=[
